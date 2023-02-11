@@ -15,11 +15,7 @@
     "ecmaVersion": 2019,
     "sourceType": "script"
   },
-  "plugins": [
-    "@typescript-eslint",
-    "jest",
-    "import"
-  ],
+  "plugins": ["@typescript-eslint", "jest", "import"],
   "rules": {
     "class-methods-use-this": "off",
     "import/extensions": "off",
@@ -37,10 +33,7 @@
   },
   "overrides": [
     {
-      "files": [
-        "**/__test__ /**/*.ts",
-        "**/jest.config.ts"
-      ],
+      "files": ["**/__test__ /**/*.ts", "**/jest.config.ts"],
       "rules": {
         "import/no-extraneous-dependencies": "off"
       }
