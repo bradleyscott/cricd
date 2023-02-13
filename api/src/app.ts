@@ -1,8 +1,8 @@
 import express from 'express';
 import { Logger } from 'tslog';
 import morgan from 'morgan';
-import errorMiddleware from './shared/middleware/error';
-import { Controller } from './shared/interfaces';
+import errorMiddleware from './shared/middleware/error.js';
+import { Controller } from './shared/interfaces.js';
 
 const log: Logger = new Logger();
 

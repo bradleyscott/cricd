@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import SupabaseAuthProvider from '../../auth/service';
-import log from '../logger';
+import SupabaseAuthProvider from '../../auth/service.js';
 
 const authProvider = new SupabaseAuthProvider(
   process.env.SUPABASE_URL ? process.env.SUPABASE_URL : '',
@@ -20,15 +19,7 @@ async function authMiddleware(
       .status(401)
       .json({ message: 'No Bearer token provided', status: 401 });
 
-  let user;
-  try {
-    user = await authProvider.validateToken(token);
-  } catch (error: any) {
-    if (error.status) return response.status(error.status).send(error.message);
-    log.error(`Failed to validate Bearer token: ${error.message}`);
-    return response.status(500).send(error.message);
-  }
-
+  const user = await authProvider.validateToken(token);
   request.headers.user = user?.id;
   next();
 }

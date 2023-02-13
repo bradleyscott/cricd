@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response, Router } from 'express';
-import { AuthProvider, Controller } from '../shared/interfaces';
-import log from '../shared/logger';
+import { AuthProvider, Controller } from '../shared/interfaces.js';
+import log from '../shared/logger.js';
 
 class AuthController implements Controller {
   path = '/auth';

@@ -1,5 +1,5 @@
-import { MatchEvent } from '../types';
-import MongoRepository from './mongoRepository';
+import { MatchEvent } from '../types.js';
+import MongoRepository from './mongoRepository.js';
 
 class EventsRepository extends MongoRepository<MatchEvent> {
   constructor(url: string, db: string) {

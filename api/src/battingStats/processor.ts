@@ -1,9 +1,9 @@
-import { EventProcessor } from '../shared/interfaces';
-import EventsRepository from '../shared/services/eventsRepository';
-import { BattingStats } from './types';
-import * as types from '../shared/types';
-import { getProcessor, updateMap } from '../shared/processors/utils';
-import MatchEventTypes from '../shared/schemas/matchEventTypes';
+import { EventProcessor } from '../shared/interfaces.js';
+import EventsRepository from '../shared/services/eventsRepository.js';
+import { BattingStats } from './types.js';
+import * as types from '../shared/types.js';
+import { getProcessor, updateMap } from '../shared/processors/utils.js';
+import MatchEventTypes from '../shared/schemas/matchEventTypes.js';
 
 class BattingStatsProcessor implements EventProcessor<BattingStats> {
   private eventsRepository: EventsRepository;

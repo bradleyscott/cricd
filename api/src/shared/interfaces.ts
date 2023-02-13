@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { Session, User } from '../auth/interfaces';
-import * as types from './types';
+import { Session, User } from '../auth/interfaces.js';
+import * as types from './types.js';
 
 export interface AuthProvider {
   validateToken(token: string): Promise<User>;

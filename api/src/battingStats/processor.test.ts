@@ -1,14 +1,14 @@
-import BattingStatsProcessor from './processor';
-import EventsRepository from '../shared/services/eventsRepository';
-import * as testData from '../fixtures/matchEvents';
+import { jest } from '@jest/globals';
+import BattingStatsProcessor from './processor.js';
+import EventsRepository from '../shared/services/eventsRepository.js';
+import * as testData from '../fixtures/matchEvents.js';
 import {
+  MatchEvent,
   ObstructionEvent,
   RetiredEvent,
   RunOutEvent,
   TimedOutEvent,
-} from '../shared/types';
-
-jest.mock('../shared/services/eventsRepository.ts');
+} from '../shared/types.js';
 
 const repository = new EventsRepository('mongodb://localhost:27017', 'cricd');
 const processor = new BattingStatsProcessor(repository);
@@ -19,8 +19,8 @@ const batter: string = '995075ac-a5d3-4b9c-b369-008c58ebc9a3';
 describe('processRuns', () => {
   it('a dot, single and boundary four', async () => {
     repository.get = jest
-      .fn()
-      .mockReturnValue([
+      .fn<() => Promise<MatchEvent[]>>()
+      .mockResolvedValue([
         testData.dotBall,
         testData.single,
         testData.boundaryFour,
@@ -35,7 +35,9 @@ describe('processRuns', () => {
   });
 
   it('runout when striker on the second run', async () => {
-    repository.get = jest.fn().mockReturnValue([testData.runOutOfStriker]);
+    repository.get = jest
+      .fn<() => Promise<MatchEvent[]>>()
+      .mockResolvedValue([testData.runOutOfStriker]);
 
     const actual = await processor.processStats(match, inning, batter);
     expect(actual.runs).toBe(1);
@@ -49,7 +51,9 @@ describe('processRuns', () => {
   });
 
   it('runout when non striker', async () => {
-    repository.get = jest.fn().mockReturnValue([testData.runOutOfNonStriker]);
+    repository.get = jest
+      .fn<() => Promise<MatchEvent[]>>()
+      .mockResolvedValue([testData.runOutOfNonStriker]);
 
     const actual = await processor.processStats(match, inning, batter);
     expect(actual.runs).toBe(0);
@@ -63,7 +67,9 @@ describe('processRuns', () => {
   });
 
   it('obstruction with no runs completed', async () => {
-    repository.get = jest.fn().mockReturnValue([testData.obstruction]);
+    repository.get = jest
+      .fn<() => Promise<MatchEvent[]>>()
+      .mockResolvedValue([testData.obstruction]);
 
     const actual = await processor.processStats(match, inning, batter);
     expect(actual.runs).toBe(0);
@@ -79,7 +85,9 @@ describe('processRuns', () => {
 
 describe('processNoBall', () => {
   it('no ball without further runs', async () => {
-    repository.get = jest.fn().mockReturnValue([testData.noBall]);
+    repository.get = jest
+      .fn<() => Promise<MatchEvent[]>>()
+      .mockResolvedValue([testData.noBall]);
 
     const actual = await processor.processStats(match, inning, batter);
     expect(actual.ballsFaced).toBe(1);
@@ -87,7 +95,9 @@ describe('processNoBall', () => {
   });
 
   it('batsman hits the ball and takes runs on no ball', async () => {
-    repository.get = jest.fn().mockReturnValue([testData.noBallFour]);
+    repository.get = jest
+      .fn<() => Promise<MatchEvent[]>>()
+      .mockResolvedValue([testData.noBallFour]);
 
     const actual = await processor.processStats(match, inning, batter);
     expect(actual.ballsFaced).toBe(1);
@@ -96,7 +106,9 @@ describe('processNoBall', () => {
   });
 
   it('batsman does not hit the ball and takes runs on no ball', async () => {
-    repository.get = jest.fn().mockReturnValue([testData.noBallSingleNotHit]);
+    repository.get = jest
+      .fn<() => Promise<MatchEvent[]>>()
+      .mockResolvedValue([testData.noBallSingleNotHit]);
 
     const actual = await processor.processStats(match, inning, batter);
     expect(actual.ballsFaced).toBe(1);
@@ -104,7 +116,9 @@ describe('processNoBall', () => {
   });
 
   it('runout as striker after hitting the ball on no ball', async () => {
-    repository.get = jest.fn().mockReturnValue([testData.noBallStrikerRunout]);
+    repository.get = jest
+      .fn<() => Promise<MatchEvent[]>>()
+      .mockResolvedValue([testData.noBallStrikerRunout]);
 
     const actual = await processor.processStats(match, inning, batter);
     expect(actual.runs).toBe(1);
@@ -118,8 +132,8 @@ describe('processNoBall', () => {
 
   it('runout of non-striker', async () => {
     repository.get = jest
-      .fn()
-      .mockReturnValue([testData.noBallNonStrikerRunout]);
+      .fn<() => Promise<MatchEvent[]>>()
+      .mockResolvedValue([testData.noBallNonStrikerRunout]);
 
     const actual = await processor.processStats(match, inning, batter);
     expect(actual.runs).toBe(0);
@@ -134,7 +148,9 @@ describe('processNoBall', () => {
 
 describe('processWide', () => {
   it('wide without further runs', async () => {
-    repository.get = jest.fn().mockReturnValue([testData.wide]);
+    repository.get = jest
+      .fn<() => Promise<MatchEvent[]>>()
+      .mockResolvedValue([testData.wide]);
 
     const actual = await processor.processStats(match, inning, batter);
     expect(actual.runs).toBe(0);
@@ -142,7 +158,9 @@ describe('processWide', () => {
   });
 
   it('wide with single', async () => {
-    repository.get = jest.fn().mockReturnValue([testData.wideWithSingle]);
+    repository.get = jest
+      .fn<() => Promise<MatchEvent[]>>()
+      .mockResolvedValue([testData.wideWithSingle]);
 
     const actual = await processor.processStats(match, inning, batter);
     expect(actual.runs).toBe(0);
@@ -150,7 +168,9 @@ describe('processWide', () => {
   });
 
   it('wide with stumping', async () => {
-    repository.get = jest.fn().mockReturnValue([testData.wideWithStumping]);
+    repository.get = jest
+      .fn<() => Promise<MatchEvent[]>>()
+      .mockResolvedValue([testData.wideWithStumping]);
 
     const actual = await processor.processStats(match, inning, batter);
     expect(actual.ballsFaced).toBe(1);
@@ -159,8 +179,8 @@ describe('processWide', () => {
 
   it('wide with runout on second run', async () => {
     repository.get = jest
-      .fn()
-      .mockReturnValue([testData.wideWithRunoutOnSecondRun]);
+      .fn<() => Promise<MatchEvent[]>>()
+      .mockResolvedValue([testData.wideWithRunoutOnSecondRun]);
 
     const actual = await processor.processStats(match, inning, batter);
     expect(actual.ballsFaced).toBe(1);
@@ -174,7 +194,9 @@ describe('processWide', () => {
 
 describe('processLegBye', () => {
   it('leg bye single', async () => {
-    repository.get = jest.fn().mockReturnValue([testData.legByeSingle]);
+    repository.get = jest
+      .fn<() => Promise<MatchEvent[]>>()
+      .mockResolvedValue([testData.legByeSingle]);
 
     const actual = await processor.processStats(match, inning, batter);
     expect(actual.runs).toBe(0);
@@ -184,7 +206,9 @@ describe('processLegBye', () => {
 
 describe('processBye', () => {
   it('bye single', async () => {
-    repository.get = jest.fn().mockReturnValue([testData.byeSingle]);
+    repository.get = jest
+      .fn<() => Promise<MatchEvent[]>>()
+      .mockResolvedValue([testData.byeSingle]);
 
     const actual = await processor.processStats(match, inning, batter);
     expect(actual.runs).toBe(0);
@@ -194,7 +218,9 @@ describe('processBye', () => {
 
 describe('processBowled', () => {
   it('bowled', async () => {
-    repository.get = jest.fn().mockReturnValue([testData.bowled]);
+    repository.get = jest
+      .fn<() => Promise<MatchEvent[]>>()
+      .mockResolvedValue([testData.bowled]);
 
     const actual = await processor.processStats(match, inning, batter);
     expect(actual.runs).toBe(0);
@@ -205,7 +231,9 @@ describe('processBowled', () => {
 
 describe('processCaught', () => {
   it('caught', async () => {
-    repository.get = jest.fn().mockReturnValue([testData.caught]);
+    repository.get = jest
+      .fn<() => Promise<MatchEvent[]>>()
+      .mockResolvedValue([testData.caught]);
 
     const actual = await processor.processStats(match, inning, batter);
     expect(actual.runs).toBe(0);
@@ -216,7 +244,9 @@ describe('processCaught', () => {
 
 describe('processLBW', () => {
   it('lbw', async () => {
-    repository.get = jest.fn().mockReturnValue([testData.lbw]);
+    repository.get = jest
+      .fn<() => Promise<MatchEvent[]>>()
+      .mockResolvedValue([testData.lbw]);
 
     const actual = await processor.processStats(match, inning, batter);
     expect(actual.runs).toBe(0);
@@ -227,7 +257,9 @@ describe('processLBW', () => {
 
 describe('processStumped', () => {
   it('stumped', async () => {
-    repository.get = jest.fn().mockReturnValue([testData.stumped]);
+    repository.get = jest
+      .fn<() => Promise<MatchEvent[]>>()
+      .mockResolvedValue([testData.stumped]);
 
     const actual = await processor.processStats(match, inning, batter);
     expect(actual.runs).toBe(0);
@@ -238,7 +270,9 @@ describe('processStumped', () => {
 
 describe('processHitWicket', () => {
   it('hit wicket', async () => {
-    repository.get = jest.fn().mockReturnValue([testData.hitWicket]);
+    repository.get = jest
+      .fn<() => Promise<MatchEvent[]>>()
+      .mockResolvedValue([testData.hitWicket]);
 
     const actual = await processor.processStats(match, inning, batter);
     expect(actual.runs).toBe(0);
@@ -249,7 +283,9 @@ describe('processHitWicket', () => {
 
 describe('processDoubleHit', () => {
   it('double hit', async () => {
-    repository.get = jest.fn().mockReturnValue([testData.doubleHit]);
+    repository.get = jest
+      .fn<() => Promise<MatchEvent[]>>()
+      .mockResolvedValue([testData.doubleHit]);
 
     const actual = await processor.processStats(match, inning, batter);
     expect(actual.runs).toBe(0);
@@ -260,7 +296,9 @@ describe('processDoubleHit', () => {
 
 describe('processTimedOut', () => {
   it('timed out', async () => {
-    repository.get = jest.fn().mockReturnValue([testData.timedOut]);
+    repository.get = jest
+      .fn<() => Promise<MatchEvent[]>>()
+      .mockResolvedValue([testData.timedOut]);
 
     const actual = await processor.processStats(match, inning, batter);
     expect(actual.runs).toBe(0);
@@ -275,7 +313,9 @@ describe('processTimedOut', () => {
 
 describe('processRetiredNotOut', () => {
   it('retired hurt', async () => {
-    repository.get = jest.fn().mockReturnValue([testData.retiredNotOut]);
+    repository.get = jest
+      .fn<() => Promise<MatchEvent[]>>()
+      .mockResolvedValue([testData.retiredNotOut]);
 
     const actual = await processor.processStats(match, inning, batter);
     expect(actual.runs).toBe(0);
@@ -286,7 +326,9 @@ describe('processRetiredNotOut', () => {
 
 describe('processRetired', () => {
   it('retired', async () => {
-    repository.get = jest.fn().mockReturnValue([testData.retired]);
+    repository.get = jest
+      .fn<() => Promise<MatchEvent[]>>()
+      .mockResolvedValue([testData.retired]);
 
     const actual = await processor.processStats(match, inning, batter);
     expect(actual.runs).toBe(0);

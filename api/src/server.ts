@@ -1,16 +1,16 @@
-import App from './app';
-import BattingStatsController from './battingStats/controller';
-import EventsController from './matchEvents/controller';
-import PingController from './ping.controller';
-import BattingStatsProcessor from './battingStats/processor';
-import EventPersister from './shared/processors/eventPersister';
-import EventsRepository from './shared/services/eventsRepository';
-import BowlingStatsController from './bowlingStats/controller';
-import BowlingStatsProcessor from './bowlingStats/processor';
-import InningStatsController from './inningsStats/controller';
-import InningsStatsProcessor from './inningsStats/processor';
-import AuthController from './auth/controller';
-import SupabaseAuthProvider from './auth/service';
+import App from './app.js';
+import BattingStatsController from './battingStats/controller.js';
+import EventsController from './matchEvents/controller.js';
+import PingController from './ping.controller.js';
+import BattingStatsProcessor from './battingStats/processor.js';
+import EventPersister from './shared/processors/eventPersister.js';
+import EventsRepository from './shared/services/eventsRepository.js';
+import BowlingStatsController from './bowlingStats/controller.js';
+import BowlingStatsProcessor from './bowlingStats/processor.js';
+import InningStatsController from './inningsStats/controller.js';
+import InningsStatsProcessor from './inningsStats/processor.js';
+import AuthController from './auth/controller.js';
+import SupabaseAuthProvider from './auth/service.js';
 
 const { SUPABASE_URL, SUPABASE_CLIENT_KEY, EVENTS_REPO_URL, EVENTS_REPO_DB } =
   process.env;

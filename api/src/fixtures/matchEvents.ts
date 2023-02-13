@@ -1,5 +1,5 @@
-import * as types from '../shared/types';
-import MatchEventTypes from '../shared/schemas/matchEventTypes';
+import * as types from '../shared/types.js';
+import MatchEventTypes from '../shared/schemas/matchEventTypes.js';
 
 export const dotBall: types.RunsEvent = {
   id: '1fddfa3e-0722-477a-89b9-29935c7ebcee',

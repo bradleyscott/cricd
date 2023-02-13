@@ -1,7 +1,7 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { AuthProvider } from '../shared/interfaces';
-import { AuthUnsuccessfulError, InvalidTokenError } from './errors';
-import { Session, User } from './interfaces';
+import { AuthProvider } from '../shared/interfaces.js';
+import { AuthUnsuccessfulError, InvalidTokenError } from './errors.js';
+import { Session, User } from './interfaces.js';
 
 class SupabaseAuthProvider implements AuthProvider {
   private client: SupabaseClient;

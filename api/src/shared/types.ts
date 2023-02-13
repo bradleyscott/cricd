@@ -1,12 +1,12 @@
 import { Infer } from 'myzod';
-import * as base from './schemas/base';
-import runsEventSchema from './schemas/runs';
-import * as extras from './schemas/extras';
-import * as dismissals from './schemas/dismissals';
+import * as base from './schemas/base.js';
+import runsEventSchema from './schemas/runs.js';
+import * as extras from './schemas/extras.js';
+import * as dismissals from './schemas/dismissals.js';
 import {
   matchEventSchema,
   declarationEventSchema,
-} from './schemas/matchEvents';
+} from './schemas/matchEvents.js';
 
 export type Player = Infer<typeof base.playerSchema>;
 export type Batters = Infer<typeof base.battersSchema>;

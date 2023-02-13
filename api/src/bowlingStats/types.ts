@@ -1,4 +1,4 @@
-import { MatchEvent, Player } from '../shared/types';
+import { MatchEvent, Player } from '../shared/types.js';
 
 export type BowlingStats = {
   bowler: Player;

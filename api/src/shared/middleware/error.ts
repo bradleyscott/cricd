@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import log from '../logger';
+import log from '../logger.js';
 
 function errorMiddleware(
   error: any,

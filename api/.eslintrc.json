@@ -2,7 +2,7 @@
   "env": {
     "es2021": true,
     "node": true,
-    "jest/globals": true
+    "jest": true
   },
   "extends": [
     "airbnb-base",
@@ -12,13 +12,18 @@
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaVersion": 2019,
-    "sourceType": "script"
+    "ecmaVersion": "latest",
+    "sourceType": "module"
   },
   "plugins": ["@typescript-eslint", "jest", "import"],
   "rules": {
     "class-methods-use-this": "off",
-    "import/extensions": "off",
+    "import/no-unresolved": [
+      "error",
+      {
+        "ignore": ["js"]
+      }
+    ],
     "indent": "off",
     "space-before-function-paren": "off",
     "no-shadow": "off",

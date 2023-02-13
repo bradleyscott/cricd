@@ -1,7 +1,7 @@
 import { MongoClient, Collection, Document } from 'mongodb';
-import log from '../logger';
-import { ItemNotFoundError, MongoRepositoryError } from '../errors';
-import { Repository } from '../interfaces';
+import log from '../logger.js';
+import { ItemNotFoundError, MongoRepositoryError } from '../errors.js';
+import { Repository } from '../interfaces.js';
 
 class MongoRepository<T> implements Repository<T> {
   private client: MongoClient;

@@ -1,13 +1,13 @@
 import myzod from 'myzod';
-import MatchEventTypes from './matchEventTypes';
+import MatchEventTypes from './matchEventTypes.js';
 import {
   doubleHitEventSchema,
   hitWicketEventSchema,
   obstructionEventSchema,
   runOutEventSchema,
   stumpedEventSchema,
-} from './dismissals';
-import { matchEventSchema, battersAndBowlersSchema } from './matchEvents';
+} from './dismissals.js';
+import { matchEventSchema, battersAndBowlersSchema } from './matchEvents.js';
 
 export const penaltyRunsEventSchema = matchEventSchema.and(
   myzod.object({

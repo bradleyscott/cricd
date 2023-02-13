@@ -1,6 +1,6 @@
 import myzod from 'myzod';
-import MatchEventTypes from './matchEventTypes';
-import { battersSchema, playerSchema, uuidSchema } from './base';
+import MatchEventTypes from './matchEventTypes.js';
+import { battersSchema, playerSchema, uuidSchema } from './base.js';
 
 export const matchEventSchema = myzod.object({
   id: uuidSchema,

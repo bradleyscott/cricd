@@ -1,7 +1,7 @@
 import myzod from 'myzod';
-import MatchEventTypes from './matchEventTypes';
-import { playerSchema } from './base';
-import { matchEventSchema, battersAndBowlersSchema } from './matchEvents';
+import MatchEventTypes from './matchEventTypes.js';
+import { playerSchema } from './base.js';
+import { matchEventSchema, battersAndBowlersSchema } from './matchEvents.js';
 
 export const bowledEventSchema = matchEventSchema
   .and(battersAndBowlersSchema)

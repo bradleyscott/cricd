@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response, Router } from 'express';
-import validationMiddleware from '../shared/middleware/validation';
-import log from '../shared/logger';
-import authMiddleware from '../shared/middleware/auth';
-import { Controller, GenericEventProcessor } from '../shared/interfaces';
-import { MatchEvent } from '../shared/types';
+import validationMiddleware from '../shared/middleware/validation.js';
+import log from '../shared/logger.js';
+import authMiddleware from '../shared/middleware/auth.js';
+import { Controller, GenericEventProcessor } from '../shared/interfaces.js';
+import { MatchEvent } from '../shared/types.js';
 
 class EventsController implements Controller {
   path = '/events';

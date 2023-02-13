@@ -1,5 +1,7 @@
-/** @type {import('ts-jest').JestConfigWithTsJest} */
-module.exports = {
+import type { Config } from 'jest';
+
+const config: Config = {
+  verbose: true,
   preset: 'ts-jest',
   testEnvironment: 'node',
   coverageThreshold: {
@@ -17,4 +19,8 @@ module.exports = {
   ],
   coverageReporters: ['json', 'lcov', 'text', 'clover'],
   testTimeout: 10000,
+  transform: {},
+  extensionsToTreatAsEsm: ['.ts'],
 };
+
+export default config;

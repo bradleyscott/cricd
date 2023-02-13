@@ -1,5 +1,5 @@
 import { Request, Response, Router } from 'express';
-import { Controller } from './shared/interfaces';
+import { Controller } from './shared/interfaces.js';
 
 class PingController implements Controller {
   public path = '/ping';

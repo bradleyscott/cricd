@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response, Router } from 'express';
-import BattingStatsProcessor from './processor';
-import log from '../shared/logger';
-import { Controller } from '../shared/interfaces';
+import BattingStatsProcessor from './processor.js';
+import log from '../shared/logger.js';
+import { Controller } from '../shared/interfaces.js';
 
 class BattingStatsController implements Controller {
   path = '/match/:match/inning/:inning/batter/:batter';

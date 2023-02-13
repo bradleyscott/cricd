@@ -1,15 +1,15 @@
-import { NoProcessorError, TypeValidationError } from '../errors';
-import { EventProcessor } from '../interfaces';
-import MatchEventTypes from '../schemas/matchEventTypes';
-import * as types from '../types';
-import runsEventSchema from '../schemas/runs';
+import { NoProcessorError, TypeValidationError } from '../errors.js';
+import { EventProcessor } from '../interfaces.js';
+import MatchEventTypes from '../schemas/matchEventTypes.js';
+import * as types from '../types.js';
+import runsEventSchema from '../schemas/runs.js';
 import {
   byesEventSchema,
   legByesEventSchema,
   noBallEventSchema,
   penaltyRunsEventSchema,
   wideEventSchema,
-} from '../schemas/extras';
+} from '../schemas/extras.js';
 import {
   bowledEventSchema,
   caughtEventSchema,
@@ -20,8 +20,8 @@ import {
   retiredNotOutEventSchema,
   stumpedEventSchema,
   timedOutEventSchema,
-} from '../schemas/dismissals';
-import { declarationEventSchema } from '../schemas/matchEvents';
+} from '../schemas/dismissals.js';
+import { declarationEventSchema } from '../schemas/matchEvents.js';
 
 const updateMap = <T>(
   current: Map<T, number>,

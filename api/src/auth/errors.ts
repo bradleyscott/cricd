@@ -1,4 +1,4 @@
-import { ApiError } from '../shared/errors';
+import { ApiError } from '../shared/errors.js';
 
 export const InvalidTokenError = ApiError.subclass('InvalidTokenError', {
   props: { statusCode: 401 },

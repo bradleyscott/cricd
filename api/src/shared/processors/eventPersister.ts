@@ -1,6 +1,9 @@
-import { EventsNotSequentialError, MatchEventNotUniqueError } from '../errors';
-import { GenericEventProcessor, Repository } from '../interfaces';
-import { MatchEvent } from '../types';
+import {
+  EventsNotSequentialError,
+  MatchEventNotUniqueError,
+} from '../errors.js';
+import { GenericEventProcessor, Repository } from '../interfaces.js';
+import { MatchEvent } from '../types.js';
 
 class EventPersister implements GenericEventProcessor<void> {
   private store: Repository<MatchEvent>;

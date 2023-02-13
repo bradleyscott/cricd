@@ -1,8 +1,8 @@
-import EventsRepository from '../shared/services/eventsRepository';
-import { EventProcessor } from '../shared/interfaces';
-import { FallOfWicket, InningsStats } from './types';
-import * as types from '../shared/types';
-import { getProcessor, updateMap } from '../shared/processors/utils';
+import EventsRepository from '../shared/services/eventsRepository.js';
+import { EventProcessor } from '../shared/interfaces.js';
+import { FallOfWicket, InningsStats } from './types.js';
+import * as types from '../shared/types.js';
+import { getProcessor, updateMap } from '../shared/processors/utils.js';
 
 class InningsStatsProcessor implements EventProcessor<InningsStats> {
   private eventsRepository: EventsRepository;

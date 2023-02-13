@@ -1,5 +1,5 @@
-import MatchEventTypes from '../shared/schemas/matchEventTypes';
-import { DeclarationEvent, MatchEvent } from '../shared/types';
+import MatchEventTypes from '../shared/schemas/matchEventTypes.js';
+import { DeclarationEvent, MatchEvent } from '../shared/types.js';
 
 export type FallOfWicket = {
   runs: number;
