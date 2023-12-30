@@ -26,17 +26,23 @@ class BattingStatsProcessor implements EventProcessor<BattingStats> {
       batters: { striker: batter },
     });
 
-    const stats = events.map(this.processEvent).reduce(this.reduceIncrements, {
-      match,
-      inning,
-      dismissal: undefined,
-      batter: { id: batter },
-      runs: 0,
-      ballsFaced: 0,
-      scoring: new Map(),
-      strikeRate: 0,
-      events: [],
-    });
+    const stats = events
+      .map(
+        this.processEvent.bind(this) as (
+          e: types.MatchEvent
+        ) => Partial<BattingStats>
+      )
+      .reduce(this.reduceIncrements, {
+        match,
+        inning,
+        dismissal: undefined,
+        batter: { id: batter },
+        runs: 0,
+        ballsFaced: 0,
+        scoring: new Map(),
+        strikeRate: 0,
+        events,
+      });
 
     stats.strikeRate =
       stats.ballsFaced > 0 ? (stats.runs / stats.ballsFaced) * 100 : 0;
@@ -53,13 +59,13 @@ class BattingStatsProcessor implements EventProcessor<BattingStats> {
       ballsFaced: current.ballsFaced + (increment.ballsFaced || 0),
       scoring: updateMap(current.scoring, increment.scoring),
       strikeRate: 0,
-      events: [...current.events, ...(increment.events || [])],
+      events: current.events,
     };
   }
 
   processEvent(e: types.MatchEvent): Partial<BattingStats> {
     const fn = getProcessor<types.MatchEvent, BattingStats>(e, this);
-    return fn(e);
+    return fn.bind(this)(e);
   }
 
   processRuns(e: types.RunsEvent): Partial<BattingStats> {

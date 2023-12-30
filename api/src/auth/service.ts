@@ -7,11 +7,14 @@ class SupabaseAuthProvider implements AuthProvider {
   private client: SupabaseClient;
 
   constructor(url: string, clientKey: string) {
-    this.client = createClient(url, clientKey);
+    this.client = createClient(url, clientKey, {});
   }
 
   async validateToken(token: string): Promise<User> {
-    const { user, error } = await this.client.auth.api.getUser(token);
+    const {
+      data: { user },
+      error,
+    } = await this.client.auth.getUser(token);
     if (error || !user)
       throw new InvalidTokenError('Token validation failed', {
         cause: error,
@@ -21,7 +24,10 @@ class SupabaseAuthProvider implements AuthProvider {
   }
 
   async login(email: string, password: string): Promise<Session> {
-    const { session, error } = await this.client.auth.signIn({
+    const {
+      data: { session },
+      error,
+    } = await this.client.auth.signInWithPassword({
       email,
       password,
     });
@@ -46,7 +52,10 @@ class SupabaseAuthProvider implements AuthProvider {
   }
 
   async register(email: string, password: string): Promise<Session> {
-    const { user, session, error } = await this.client.auth.signUp({
+    const {
+      data: { user, session },
+      error,
+    } = await this.client.auth.signUp({
       email,
       password,
     });
@@ -67,7 +76,12 @@ class SupabaseAuthProvider implements AuthProvider {
   }
 
   async logout(token: string): Promise<void> {
-    await this.client.auth.api.signOut(token);
+    const { error } = await this.client.auth.admin.signOut(token);
+    if (error)
+      throw new InvalidTokenError('Token invalidation failed', {
+        cause: error,
+        props: { token },
+      });
   }
 }
 

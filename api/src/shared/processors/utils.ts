@@ -29,7 +29,7 @@ const updateMap = <T>(
 ): Map<T, number> => {
   if (!increment) return current;
 
-  const updated = new Map<T, number>();
+  const updated = new Map<T, number>(current);
   increment.forEach((value, key) => {
     if (value > 0) updated.set(key, current.get(key) || 0 + value);
   });

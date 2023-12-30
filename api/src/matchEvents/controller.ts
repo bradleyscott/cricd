@@ -4,6 +4,7 @@ import log from '../shared/logger.js';
 import authMiddleware from '../shared/middleware/auth.js';
 import { Controller, GenericEventProcessor } from '../shared/interfaces.js';
 import { MatchEvent } from '../shared/types.js';
+import { handleErrors } from '../shared/controllers.js';
 
 class EventsController implements Controller {
   path = '/events';
@@ -22,7 +23,7 @@ class EventsController implements Controller {
       this.path,
       authMiddleware,
       validationMiddleware,
-      this.postEvent
+      handleErrors(this.postEvent)
     );
   }
 

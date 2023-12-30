@@ -4,7 +4,7 @@ import morgan from 'morgan';
 import errorMiddleware from './shared/middleware/error.js';
 import { Controller } from './shared/interfaces.js';
 
-const log: Logger = new Logger();
+const log = new Logger();
 
 class App {
   public app: express.Application;

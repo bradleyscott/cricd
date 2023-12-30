@@ -2,6 +2,7 @@ import { NextFunction, Request, Response, Router } from 'express';
 import { Controller } from '../shared/interfaces.js';
 import InningsStatsProcessor from './processor.js';
 import log from '../shared/logger.js';
+import { handleErrors } from '../shared/controllers.js';
 
 class InningStatsController implements Controller {
   path = '/match/:match/inning/:inning';
@@ -16,7 +17,7 @@ class InningStatsController implements Controller {
   }
 
   private initializeRoutes() {
-    this.router.get(this.path, this.getStats);
+    this.router.get(this.path, handleErrors(this.getStats));
   }
 
   private getStats = async (

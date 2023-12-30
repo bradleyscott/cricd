@@ -3,6 +3,7 @@ import { EventProcessor } from '../shared/interfaces.js';
 import { FallOfWicket, InningsStats } from './types.js';
 import * as types from '../shared/types.js';
 import { getProcessor, updateMap } from '../shared/processors/utils.js';
+import MatchEventTypes from '../shared/schemas/matchEventTypes.js';
 
 class InningsStatsProcessor implements EventProcessor<InningsStats> {
   private eventsRepository: EventsRepository;
@@ -46,17 +47,23 @@ class InningsStatsProcessor implements EventProcessor<InningsStats> {
       );
       return stats;
     };
-    const stats = events.map(this.processEvent).reduce(reducer, {
-      match,
-      inning,
-      runs: 0,
-      extras: new Map(),
-      wickets: [],
-      legalDeliveries: 0,
-      over: 0,
-      overBall: 0,
-      fallOfWickets: [],
-    });
+    const stats = events
+      .map(
+        this.processEvent.bind(this) as (
+          e: types.MatchEvent
+        ) => Partial<InningsStats>
+      )
+      .reduce(reducer, {
+        match,
+        inning,
+        runs: 0,
+        extras: new Map(),
+        wickets: [],
+        legalDeliveries: 0,
+        over: 0,
+        overBall: 0,
+        fallOfWickets: [],
+      });
 
     return stats as InningsStats;
   }
@@ -82,7 +89,7 @@ class InningsStatsProcessor implements EventProcessor<InningsStats> {
 
   processEvent(e: types.MatchEvent): Partial<InningsStats> {
     const fn = getProcessor<types.MatchEvent, InningsStats>(e, this);
-    return fn(e);
+    return fn.bind(this)(e);
   }
 
   processRuns(e: types.RunsEvent): Partial<InningsStats> {
@@ -94,6 +101,7 @@ class InningsStatsProcessor implements EventProcessor<InningsStats> {
       legalDeliveries: 1,
       runs: e.runs + (penalties.runs || 0),
       wickets: e.dismissal ? [e.dismissal] : undefined,
+      extras: penalties.extras,
     };
   }
 
@@ -104,12 +112,15 @@ class InningsStatsProcessor implements EventProcessor<InningsStats> {
       ? this.processPenaltyRuns(e.penaltyRuns)
       : {};
 
-    const extras = new Map([[e.type, e.runs]]);
+    const extraRuns =
+      e.type === MatchEventTypes.Wide || e.type === MatchEventTypes.NoBall
+        ? e.runs + 1
+        : e.runs;
+    const extras = new Map([[e.type, extraRuns]]);
     const penaltyExtras = penalties.extras ? penalties.extras : new Map();
     const extrasAndPenaltyExtras = new Map([...extras, ...penaltyExtras]);
 
     return {
-      legalDeliveries: 1,
       runs: e.runs + (penalties.runs || 0),
       wickets: e.dismissal ? [e.dismissal] : undefined,
       extras: extrasAndPenaltyExtras,
@@ -118,20 +129,20 @@ class InningsStatsProcessor implements EventProcessor<InningsStats> {
 
   processNoBall(e: types.NoBallEvent): Partial<InningsStats> {
     const x = this.processExtra(e);
-    return { ...x, runs: (x.runs || 0) + 1 };
+    return { ...x, runs: (x.runs || 0) + 1, legalDeliveries: 0 };
   }
 
   processWide(e: types.WideEvent): Partial<InningsStats> {
     const x = this.processExtra(e);
-    return { ...x, runs: (x.runs || 0) + 1 };
+    return { ...x, runs: (x.runs || 0) + 1, legalDeliveries: 0 };
   }
 
   processLegBye(e: types.LegByeEvent): Partial<InningsStats> {
-    return this.processExtra(e);
+    return { ...this.processExtra(e), legalDeliveries: 1 };
   }
 
   processBye(e: types.ByeEvent): Partial<InningsStats> {
-    return this.processExtra(e);
+    return { ...this.processExtra(e), legalDeliveries: 1 };
   }
 
   processPenaltyRuns(e: types.PenaltyRunsEvent): Partial<InningsStats> {

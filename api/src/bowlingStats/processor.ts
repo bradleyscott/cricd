@@ -19,21 +19,27 @@ class BowlingStatsProcessor implements EventProcessor<BowlingStats> {
   ): Promise<BowlingStats> {
     const events = await this.eventsRepository.get({ match, inning, bowler });
 
-    const stats = events.map(this.processEvent).reduce(this.reduceIncrements, {
-      match,
-      inning,
-      bowler: { id: bowler },
-      legalDeliveries: 0,
-      runs: 0,
-      wickets: [],
-      extras: [],
-      extrasConceded: 0,
-      scoring: new Map(),
-      events: [],
-      average: 0,
-      economyRate: 0,
-      strikeRate: 0,
-    });
+    const stats = events
+      .map(
+        this.processEvent.bind(this) as (
+          e: types.MatchEvent
+        ) => Partial<BowlingStats>
+      )
+      .reduce(this.reduceIncrements, {
+        match,
+        inning,
+        bowler: { id: bowler },
+        legalDeliveries: 0,
+        runs: 0,
+        wickets: [],
+        extras: [],
+        extrasConceded: 0,
+        scoring: new Map(),
+        events,
+        average: 0,
+        economyRate: 0,
+        strikeRate: 0,
+      });
 
     stats.average =
       stats.wickets.length > 0 ? stats.runs / stats.wickets.length : 0;
@@ -58,7 +64,7 @@ class BowlingStatsProcessor implements EventProcessor<BowlingStats> {
       extras: [...current.extras, ...(increment.extras || [])],
       extrasConceded: current.extrasConceded + (increment.extrasConceded || 0),
       scoring: updateMap(current.scoring, increment.scoring),
-      events: [...current.events, ...(increment.events || [])],
+      events: current.events,
       average: 0,
       economyRate: 0,
       strikeRate: 0,
@@ -67,12 +73,12 @@ class BowlingStatsProcessor implements EventProcessor<BowlingStats> {
 
   processEvent(e: types.MatchEvent): Partial<BowlingStats> {
     const fn = getProcessor<types.MatchEvent, BowlingStats>(e, this);
-    return fn(e);
+    return fn.bind(this)(e);
   }
 
   processRuns(e: types.RunsEvent): Partial<BowlingStats> {
     return {
-      runs: e.runs + 1,
+      runs: e.runs,
       legalDeliveries: 1,
       scoring: new Map<number, number>().set(e.runs, e.runs),
     };
@@ -84,6 +90,7 @@ class BowlingStatsProcessor implements EventProcessor<BowlingStats> {
       extrasConceded: e.runs + 1,
       extras: [e],
       scoring: new Map<number, number>().set(e.runs, e.runs),
+      events: [e],
     };
   }
 
@@ -140,8 +147,8 @@ class BowlingStatsProcessor implements EventProcessor<BowlingStats> {
     return this.processWicket(e);
   }
 
-  processDoubleHit(e: types.DoubleHitEvent): Partial<BowlingStats> {
-    return this.processWicket(e);
+  processDoubleHit(_e: types.DoubleHitEvent): Partial<BowlingStats> {
+    return { legalDeliveries: 1 };
   }
 
   processTimedOut(_e: types.TimedOutEvent): Partial<BowlingStats> {

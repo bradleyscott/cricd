@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import { AuthProvider, Controller } from '../shared/interfaces.js';
 import log from '../shared/logger.js';
+import { handleErrors } from '../shared/controllers.js';
 
 class AuthController implements Controller {
   path = '/auth';
@@ -15,9 +16,9 @@ class AuthController implements Controller {
   }
 
   private initializeRoutes() {
-    this.router.post(`${this.path}/login`, this.login);
-    this.router.post(`${this.path}/register`, this.register);
-    this.router.post(`${this.path}/logout`, this.logout);
+    this.router.post(`${this.path}/login`, handleErrors(this.login));
+    this.router.post(`${this.path}/register`, handleErrors(this.register));
+    this.router.post(`${this.path}/logout`, handleErrors(this.logout));
   }
 
   private login = async (
@@ -74,7 +75,7 @@ class AuthController implements Controller {
 
     await this.authProvider.logout(token);
     log.debug(`Access token ${token} invalidated`);
-    return response.status(200);
+    return response.status(200).send();
   };
 }
 
