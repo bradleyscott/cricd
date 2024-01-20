@@ -1,0 +1,15 @@
+{
+  "name": "cricd",
+  "version": "1.0.0",
+  "scripts": {
+    "typecheck": "npm run typecheck --workspaces",
+    "fmt": "npm run fmt --workspaces",
+    "lint": "npm run lint --workspaces",
+    "test": "npm run test --workspaces",
+    "prepare": "cd .. && husky install api/.husky"
+  },
+  "workspaces": [
+    "core",
+    "api"
+  ]
+}

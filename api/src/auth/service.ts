@@ -1,5 +1,5 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { AuthProvider } from '../shared/interfaces.js';
+import { AuthProvider } from '../auth/interfaces.js';
 import { AuthUnsuccessfulError, InvalidTokenError } from './errors.js';
 import { Session, User } from './interfaces.js';
 

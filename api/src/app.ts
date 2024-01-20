@@ -1,10 +1,8 @@
 import express from 'express';
-import { Logger } from 'tslog';
+import { log } from '@cricd/core/index.js';
 import morgan from 'morgan';
-import errorMiddleware from './shared/middleware/error.js';
-import { Controller } from './shared/interfaces.js';
-
-const log = new Logger();
+import { Controller } from './controllers/interface.js';
+import errorMiddleware from './middleware/error.js';
 
 class App {
   public app: express.Application;
