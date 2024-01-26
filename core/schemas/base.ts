@@ -19,6 +19,7 @@ export const battersRefSchema = myzod.object({
 export const teamRefSchema = myzod.object({
   id: uuidSchema,
   name: myzod.string(),
+  players: myzod.array(personRefSchema).optional(),
 });
 
 export const matchInfoSchema = myzod.object({
