@@ -6,27 +6,28 @@ import {
 import * as processors from '@cricd/core/processors/index.js';
 import App from './app.js';
 import * as controllers from './controllers/index.js';
-import SupabaseAuthProvider from './auth/service.js';
+import MongoAuthProvider from './auth/service.js';
 
-const { SUPABASE_URL, SUPABASE_CLIENT_KEY, REPO_URL, REPO_DB } = process.env;
+const { REPO_URL, REPO_DB, JWT_SECRET } = process.env;
 
 const repoUrl = REPO_URL ?? 'mongodb://localhost:27017';
 const repoDb = REPO_DB ?? 'cricd';
 
 const eventsRepository = new EventsRepository(repoUrl, repoDb);
-
-const authProvider = new SupabaseAuthProvider(
-  SUPABASE_URL ?? '',
-  SUPABASE_CLIENT_KEY ?? ''
+const authProvider = new MongoAuthProvider(
+  new MongoRepository(repoUrl, repoDb, 'users'),
+  JWT_SECRET ?? ''
 );
 
 const app = new App([
   new controllers.PingController(),
-  new controllers.EventsController([
-    new processors.EventPersister(eventsRepository),
-  ]),
+  new controllers.EventsController(
+    [new processors.EventPersister(eventsRepository)],
+    authProvider
+  ),
   new controllers.MatchController(
-    new MongoRepository<MatchInfo>(repoUrl, repoDb, 'match')
+    new MongoRepository<MatchInfo>(repoUrl, repoDb, 'match'),
+    authProvider
   ),
   new controllers.AuthController(authProvider),
   new controllers.BattingStatsController(

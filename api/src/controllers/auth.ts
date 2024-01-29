@@ -19,7 +19,6 @@ class AuthController implements Controller {
   private initializeRoutes() {
     this.router.post(`${this.path}/login`, handleErrors(this.login));
     this.router.post(`${this.path}/register`, handleErrors(this.register));
-    this.router.post(`${this.path}/logout`, handleErrors(this.logout));
   }
 
   private login = async (
@@ -60,23 +59,6 @@ class AuthController implements Controller {
     );
     log.debug(`${request.body.email} successfully registered`);
     return response.status(200).send(session);
-  };
-
-  private logout = async (
-    request: Request,
-    response: Response,
-    _next: NextFunction
-  ) => {
-    const token = request.body.accessToken;
-    if (!token) {
-      const message = 'accessToken is required';
-      log.debug(message);
-      return response.status(400).send(message);
-    }
-
-    await this.authProvider.logout(token);
-    log.debug(`Access token ${token} invalidated`);
-    return response.status(200).send();
   };
 }
 

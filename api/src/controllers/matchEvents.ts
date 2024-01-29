@@ -5,6 +5,7 @@ import { MatchEvent } from '@cricd/core/types.js';
 import * as middleware from '../middleware/index.js';
 import { handleErrors } from './handleErrors.js';
 import { Controller } from './interface.js';
+import { AuthProvider } from '../auth/interfaces.js';
 
 class EventsController implements Controller {
   path = '/events';
@@ -13,7 +14,13 @@ class EventsController implements Controller {
 
   private processors: GenericEventProcessor<void>[] = [];
 
-  constructor(processors: GenericEventProcessor<void>[]) {
+  private authProvider: AuthProvider;
+
+  constructor(
+    processors: GenericEventProcessor<void>[],
+    authProvider: AuthProvider
+  ) {
+    this.authProvider = authProvider;
     this.initializeRoutes();
     this.processors = processors;
   }
@@ -21,7 +28,7 @@ class EventsController implements Controller {
   private initializeRoutes() {
     this.router.post(
       this.path,
-      middleware.authMiddleware,
+      this.authProvider.middleware.bind(this.authProvider),
       middleware.validationMiddleware,
       handleErrors(this.postEvent)
     );

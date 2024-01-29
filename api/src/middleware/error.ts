@@ -12,7 +12,10 @@ function errorMiddleware(
   const logLevel = status >= 500 ? 'error' : 'debug';
 
   log[logLevel](error);
-  response.status(status).send(message);
+  response.status(status).send({
+    status,
+    message,
+  });
 }
 
 export default errorMiddleware;
